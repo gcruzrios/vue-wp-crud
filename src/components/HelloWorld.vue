@@ -121,7 +121,8 @@
            this.$router.push({ name: 'Crud' })
         }).catch(err => {
 
-          console.log(err)
+          console.log(err);
+          alert("Credenciales inválidas");
         
         })
 
