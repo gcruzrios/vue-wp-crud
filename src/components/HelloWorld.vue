@@ -1,151 +1,140 @@
 <template>
   <v-container>
     <v-row class="text-center">
-      <v-col cols="12">
+      <v-col cols=4></v-col>
+      <v-col cols="4">
         <v-img
           :src="require('../assets/logo.svg')"
           class="my-3"
           contain
           height="200"
         />
-      </v-col>
-
-      <v-col class="mb-4">
-        <h1 class="display-2 font-weight-bold mb-3">
-          Welcome to Vuetify
+        <h1 class="display-2 font-weight-bold mb-10">
+          Welcome to WP CRUD
         </h1>
 
-        <p class="subheading font-weight-regular">
-          For help and collaboration with other Vuetify developers,
-          <br>please join our online
-          <a
-            href="https://community.vuetifyjs.com"
-            target="_blank"
-          >Discord Community</a>
-        </p>
-      </v-col>
+        <form>
+          <v-text-field
+            v-model="username"
+            :error-messages="usernameErrors"
+            :counter="20"
+            label="Username"
+            required
+            @input="$v.username.$touch()"
+            @blur="$v.username.$touch()"
+            
+          ></v-text-field>
+          <v-text-field
+            v-model="password"
+            :error-messages="passwordErrors"
+            :counter="20"
+            label="Password"
+            type="password"
+            required
+            @input="$v.password.$touch()"
+            @blur="$v.password.$touch()"
+            
+          ></v-text-field>
+          
 
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          What's next?
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(next, i) in whatsNext"
-            :key="i"
-            :href="next.href"
-            class="subheading mx-3"
-            target="_blank"
+          <v-btn
+            class="mr-4"
+            @click="submit"
           >
-            {{ next.text }}
-          </a>
-        </v-row>
+          <!--  -->
+ 
+            submit
+          </v-btn>
+          <v-btn @click="clear">
+            clear
+          </v-btn>
+        </form>
       </v-col>
 
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Important Links
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(link, i) in importantLinks"
-            :key="i"
-            :href="link.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ link.text }}
-          </a>
-        </v-row>
+      <v-col cols="4" class="lg-3 mb-4">
+        
+        
+        
       </v-col>
+      
+      
 
-      <v-col
-        class="mb-5"
-        cols="12"
-      >
-        <h2 class="headline font-weight-bold mb-3">
-          Ecosystem
-        </h2>
-
-        <v-row justify="center">
-          <a
-            v-for="(eco, i) in ecosystem"
-            :key="i"
-            :href="eco.href"
-            class="subheading mx-3"
-            target="_blank"
-          >
-            {{ eco.text }}
-          </a>
-        </v-row>
-      </v-col>
+     
     </v-row>
   </v-container>
 </template>
 
 <script>
+
+
+  import { validationMixin } from 'vuelidate'
+  import { required, maxLength } from 'vuelidate/lib/validators'
+
   export default {
+    
     name: 'HelloWorld',
+    mixins: [validationMixin],
+
+    validations: {
+      username: { required, maxLength: maxLength(20) },
+      password: { required, maxLength: maxLength(20) },
+    },
 
     data: () => ({
-      ecosystem: [
-        {
-          text: 'vuetify-loader',
-          href: 'https://github.com/vuetifyjs/vuetify-loader',
-        },
-        {
-          text: 'github',
-          href: 'https://github.com/vuetifyjs/vuetify',
-        },
-        {
-          text: 'awesome-vuetify',
-          href: 'https://github.com/vuetifyjs/awesome-vuetify',
-        },
-      ],
-      importantLinks: [
-        {
-          text: 'Documentation',
-          href: 'https://vuetifyjs.com',
-        },
-        {
-          text: 'Chat',
-          href: 'https://community.vuetifyjs.com',
-        },
-        {
-          text: 'Made with Vuetify',
-          href: 'https://madewithvuejs.com/vuetify',
-        },
-        {
-          text: 'Twitter',
-          href: 'https://twitter.com/vuetifyjs',
-        },
-        {
-          text: 'Articles',
-          href: 'https://medium.com/vuetify',
-        },
-      ],
-      whatsNext: [
-        {
-          text: 'Explore components',
-          href: 'https://vuetifyjs.com/components/api-explorer',
-        },
-        {
-          text: 'Select a layout',
-          href: 'https://vuetifyjs.com/getting-started/pre-made-layouts',
-        },
-        {
-          text: 'Frequently Asked Questions',
-          href: 'https://vuetifyjs.com/getting-started/frequently-asked-questions',
-        },
-      ],
+      username: '',
+      password: '',
+    
     }),
+     computed: {
+      
+      usernameErrors () {
+        const errors = []
+        if (!this.$v.username.$dirty) return errors
+        !this.$v.username.maxLength && errors.push('Username must be at most 20 characters long')
+        !this.$v.username.required && errors.push('Username is required.')
+        return errors
+      },
+      passwordErrors () {
+        const errors = []
+        if (!this.$v.password.$dirty) return errors
+     
+        !this.$v.password.required && errors.push('Password is required')
+        return errors
+      },
+    },
+
+    methods: {
+      submit () {
+
+        this.error=null;
+         
+        console.log(this.username)
+        console.log(this.password)
+        //axios.post('jwt-auth/v1/token/', {username: this.username, password: this.password})
+        
+        // .then(respuesta => {
+        //     console.log(respuesta.data);
+        //     return respuesta.data
+
+        // })
+        // .then(data => {        
+        //     this.$store.dispatch("guardarToken", data.token)
+        //     this.$router.push({ name: 'Crud' })
+        // })
+        // .catch(err => {
+
+            //console.log(err)
+        
+        //})
+
+       // this.$v.$touch()
+      },
+      clear () {
+        this.$v.$reset()
+        this.username = ''
+        this.password = ''
+        
+      },
+    },
   }
 </script>
