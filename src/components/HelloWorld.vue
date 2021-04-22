@@ -66,7 +66,7 @@
 
 <script>
 
-
+  import axios from 'axios';
   import { validationMixin } from 'vuelidate'
   import { required, maxLength } from 'vuelidate/lib/validators'
 
@@ -108,24 +108,22 @@
 
         this.error=null;
          
-        console.log(this.username)
-        console.log(this.password)
-        //axios.post('jwt-auth/v1/token/', {username: this.username, password: this.password})
+        //console.log(this.username)
+        //console.log(this.password)
+        axios.post('jwt-auth/v1/token/', {username: this.username, password: this.password})
         
-        // .then(respuesta => {
-        //     console.log(respuesta.data);
-        //     return respuesta.data
+        .then(respuesta => {
+            //console.log(respuesta.data);
+            return respuesta.data
 
-        // })
-        // .then(data => {        
-        //     this.$store.dispatch("guardarToken", data.token)
-        //     this.$router.push({ name: 'Crud' })
-        // })
-        // .catch(err => {
+        }).then(data => {        
+           this.$store.dispatch("guardarToken", data.token)
+           this.$router.push({ name: 'Crud' })
+        }).catch(err => {
 
-            //console.log(err)
+          console.log(err)
         
-        //})
+        })
 
        // this.$v.$touch()
       },

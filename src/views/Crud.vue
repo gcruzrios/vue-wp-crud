@@ -20,7 +20,7 @@
           v-model="dialog"
           max-width="500px"
         >
-          <template v-slot:activator="{ on, attrs }">
+          <template v-slot:activator="{ on, attrs, off }">
             <v-btn
               color="primary"
               dark
@@ -29,6 +29,14 @@
               v-on="on"
             >
               New Item
+            </v-btn>
+            <v-btn
+              color="secondary"
+              dark
+              class="mb-2 mr-3"
+              @click="closeSession"
+            >
+              Close session
             </v-btn>
           </template>
           <v-card>
@@ -152,12 +160,17 @@
   </v-data-table>
 </template>
 <script>
+
+  let token = localStorage.getItem("token")
+  //console.log(token);
+  const Token_wp = 'Bearer '+token;
   export default {
+
     data: () => ({
     
     config:{
         headers:{
-            Authorization: 'Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczpcL1wvZ3JlaXZpbi5uZXQiLCJpYXQiOjE2MTkxMDQ0MTAsIm5iZiI6MTYxOTEwNDQxMCwiZXhwIjoxNjE5NzA5MjEwLCJkYXRhIjp7InVzZXIiOnsiaWQiOiIxIn19fQ.WrF0pnEyeXFkV2F65oFXYZixGTs0G4qo1vZeR7NsLaQ'
+            Authorization: Token_wp
         }
     },
 
@@ -179,7 +192,7 @@
       entradas: [],
       editedIndex: -1,
       editedItem: {
-        title: 'Entrada WP',
+        title: '',
         id: '',
         content: '',
         date: '',
@@ -305,7 +318,7 @@
             } catch (error) {
                 console.log(error);
             }
-
+            
           //const entradaDb = await this.axios.post(`wp/v2/posts/${this.editedItem.id}`,this.editedItem, this.config); 
 
         } else {
@@ -327,11 +340,21 @@
                 console.log(error);
             }
             this.entradas.push(this.editedItem)
-                    
+            
+            
           //this.entradas.push(this.editedItem)
         }
+        
         this.close()
       },
+      closeSession () {
+        //commit("setToken", null)
+        //commit("setUsuario", null)
+        localStorage.removeItem("token")
+        this.$router.push({ name: 'Home' })
+        //router.push({name: 'Home'})
+      }
     },
+
   }
 </script>
